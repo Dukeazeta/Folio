@@ -39,31 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   glitchEffect(document.querySelector('h1'));
 
-  // Particle background effect
-  particlesJS('particles-js', {
-    particles: {
-      number: { value: 80, density: { enable: true, value_area: 800 } },
-      color: { value: '#ffffff' },
-      shape: { type: 'circle', stroke: { width: 0, color: '#000000' } },
-      opacity: { value: 0.5, random: false, anim: { enable: false } },
-      size: { value: 3, random: true, anim: { enable: false } },
-      line_linked: { enable: true, distance: 150, color: '#ffffff', opacity: 0.4, width: 1 },
-      move: { enable: true, speed: 6, direction: 'none', random: false, straight: false, out_mode: 'out', bounce: false }
-    },
-    interactivity: {
-      detect_on: 'canvas',
-      events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' }, resize: true },
-      modes: { grab: { distance: 400, line_linked: { opacity: 1 } }, bubble: { distance: 400, size: 40, duration: 2, opacity: 8 }, repulse: { distance: 200, duration: 0.4 }, push: { particles_nb: 4 }, remove: { particles_nb: 2 } }
-    },
-    retina_detect: true
-  });
-
-  // Smooth scroll animation
+  // Smooth and slow scroll animation
   const smoothScroll = (target) => {
     gsap.to(window, {
-      duration: 1,
+      duration: 1.5,
       scrollTo: { y: target, offsetY: 50 },
-      ease: 'power3.inOut'
+      ease: 'power2.inOut'
     });
   };
 
@@ -80,11 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
     underline.classList.add('nav-underline');
     link.appendChild(underline);
 
-    gsap.from(underline, {
+    gsap.set(underline, { 
       width: 0,
-      duration: 0.3,
-      ease: 'power1.inOut',
-      paused: true
+      height: '2px',
+      background: 'var(--primary-color)',
+      position: 'absolute',
+      bottom: '-2px',
+      left: 0
     });
 
     link.animation = gsap.to(underline, {
@@ -111,23 +94,40 @@ document.addEventListener('DOMContentLoaded', () => {
       default: width = '50%';
     }
 
+    const barContainer = document.createElement('div');
+    barContainer.classList.add('skill-bar-container');
     const bar = document.createElement('div');
     bar.classList.add('skill-bar');
-    skill.appendChild(bar);
+    barContainer.appendChild(bar);
+    skill.appendChild(barContainer);
 
-    gsap.from(bar, {
+    gsap.set(barContainer, {
+      width: '100%',
+      height: '6px',
+      background: 'rgba(0,0,0,0.1)',
+      borderRadius: '3px',
+      marginTop: '5px',
+      overflow: 'hidden'
+    });
+
+    gsap.set(bar, {
+      width: 0,
+      height: '100%',
+      background: 'var(--primary-color)',
+      borderRadius: '3px'
+    });
+
+    gsap.to(bar, {
       scrollTrigger: {
         trigger: skill,
         start: 'top 80%',
         end: 'bottom 20%',
         toggleActions: 'restart pause reverse pause'
       },
-      width: 0,
+      width: width,
       duration: 1,
       ease: 'power3.out'
     });
-
-    gsap.to(bar, { width: width });
   });
 
   // Animated counters for experience years
@@ -170,16 +170,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const y = (e.clientY - rect.top) / rect.height - 0.5;
 
       gsap.to(content, {
-        rotationY: -10 * x,
-        rotationX: 10 * y,
+        rotationY: -5 * x,
+        rotationX: 5 * y,
         transformPerspective: 500,
         ease: 'power1.out',
         duration: 0.5
       });
 
       gsap.to(image, {
-        rotationY: -15 * x,
-        rotationX: 15 * y,
+        rotationY: -7.5 * x,
+        rotationX: 7.5 * y,
         transformPerspective: 500,
         scale: 1.05,
         ease: 'power1.out',
@@ -198,27 +198,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Animated background gradient
-  gsap.to('body', {
-    background: 'linear-gradient(45deg, #ff9a9e, #fad0c4, #ffecd2)',
-    backgroundSize: '400% 400%',
-    duration: 15,
-    repeat: -1,
-    yoyo: true,
-    ease: 'sine.inOut'
-  });
+  // Cool scroll fade animation
+  const fadeInElements = document.querySelectorAll('.fade-in');
+  fadeInElements.forEach(element => {
+    gsap.set(element, { 
+      opacity: 0, 
+      y: 50 
+    });
 
-  // Reveal animations for sections
-  gsap.utils.toArray('section').forEach(section => {
-    gsap.from(section, {
+    gsap.to(element, {
       scrollTrigger: {
-        trigger: section,
+        trigger: element,
         start: 'top 80%',
         end: 'bottom 20%',
         toggleActions: 'play none none reverse'
       },
-      opacity: 0,
-      y: 50,
+      opacity: 1,
+      y: 0,
       duration: 1,
       ease: 'power3.out'
     });
